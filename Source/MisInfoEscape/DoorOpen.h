@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+//#include "Components/ActorComponent.h"
 #include "Engine/TriggerVolume.h"
 #include "DoorOpen.generated.h"
 

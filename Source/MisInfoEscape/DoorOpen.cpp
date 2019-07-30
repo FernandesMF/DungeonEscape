@@ -3,7 +3,9 @@
 #include "DoorOpen.h"
 #include "Gameframework/Actor.h"
 #include "Engine/World.h"
-#include "GameFramework/Controller.h"
+#include "GameFramework/PlayerController.h"
+//#include "GameFramework/Controller.h"
+
 
 // Sets default values for this component's properties
 UDoorOpen::UDoorOpen()
