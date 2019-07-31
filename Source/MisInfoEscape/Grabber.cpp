@@ -1,10 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "DooOpener.h"
-#include "Gameframework/Actor.h"
+#include "Grabber.h"
 
 // Sets default values for this component's properties
-UDooOpener::UDooOpener()
+UGrabber::UGrabber()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -15,21 +14,23 @@ UDooOpener::UDooOpener()
 
 
 // Called when the game starts
-void UDooOpener::BeginPlay()
+void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AActor* Owner = GetOwner();
-	FRotator NewRotation (0.f, -60.f, 0.f);
-	Owner->SetActorRotation(NewRotation);
+	UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty!"));
+	
 }
 
 
 // Called every frame
-void UDooOpener::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	// Get player POV (and log it out, for now)
+	// Cast ray up to a given distance
+	// Check what is being reached
+	// Grab it...
 }
 
