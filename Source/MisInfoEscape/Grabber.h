@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+
+#include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "Public/DrawDebugHelpers.h"
+
 #include "Grabber.generated.h"
 
 
@@ -24,7 +28,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	
 private:
-	AController* 
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	float Reach = 100.0f;
+	FVector LineTraceEnd;
 };
