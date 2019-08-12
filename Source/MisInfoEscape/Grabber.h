@@ -42,4 +42,5 @@ private:
 	UInputComponent* InputComponent = nullptr;
 
 	void Grab();						// Ray-casts and grabs what is in reach
+	void Release();
 };

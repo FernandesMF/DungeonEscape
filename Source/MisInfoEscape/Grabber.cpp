@@ -33,6 +33,7 @@ void UGrabber::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("Found input component for %s!"), *GetOwner()->GetName());
 		/// Bind the input action
 		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("%s has no input component..."), *GetOwner()->GetName());
@@ -42,10 +43,15 @@ void UGrabber::BeginPlay()
 
 void UGrabber::Grab() 
 {
-	UE_LOG(LogTemp, Warning, TEXT("Onw way, or another, I'm gonna grab you."));
+	UE_LOG(LogTemp, Warning, TEXT("One way, or another, I'm gonna grab you."));
 	return;
 }
 
+void UGrabber::Release()
+{
+	UE_LOG(LogTemp, Warning, TEXT("But not this time."));
+	return;
+}
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
