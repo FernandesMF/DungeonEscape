@@ -10,6 +10,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Public/CollisionQueryParams.h"
 #include "Public/DrawDebugHelpers.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 #include "Grabber.generated.h"
 
@@ -34,6 +35,7 @@ public:
 private:
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
-	float Reach = 100.0f;
+	float Reach = 100.0f;		// reaching distance in cm
 	FVector LineTraceEnd;
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 };
