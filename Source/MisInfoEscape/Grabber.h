@@ -41,6 +41,9 @@ private:
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
 
-	void Grab();						// Ray-casts and grabs what is in reach
-	void Release();
+	void FindPhysicsHandleComponent();	// Finds 
+	void SetupInputComponent();
+	void Grab();						// Ray-casts and tries to grab what is in reach
+	FHitResult GetFirstPhysicsBodyHandleInReach();
+	void Release();						// Releases the grabbed object
 };
