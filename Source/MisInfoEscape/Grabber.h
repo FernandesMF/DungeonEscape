@@ -11,6 +11,7 @@
 #include "Public/CollisionQueryParams.h"
 #include "Public/DrawDebugHelpers.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Components/InputComponent.h"
 
 #include "Grabber.generated.h"
 
@@ -35,7 +36,10 @@ public:
 private:
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
-	float Reach = 100.0f;		// reaching distance in cm
+	float Reach = 100.0f;				// reaching distance in cm
 	FVector LineTraceEnd;
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UInputComponent* InputComponent = nullptr;
+
+	void Grab();						// Ray-casts and grabs what is in reach
 };
