@@ -26,8 +26,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void OpenDoor();
-
 	void CloseDoor();
+	float TotalMassOverPressurePlate();
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -36,6 +36,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	float CloseDelay = 0.3f;
 
+	UPROPERTY(EditAnywhere)
+	float TriggerMass = 200.f;
+
 	float LastOpenTime = 0.0f;
 
 	UPROPERTY(EditAnywhere)
@@ -43,6 +46,6 @@ private:
 
 	AActor* Owner = GetOwner();
 
-	UPROPERTY(VisibleAnywhere)
-	AActor* ActorThatTriggers;
+	//UPROPERTY(VisibleAnywhere)
+	//AActor* ActorThatTriggers;
 };
