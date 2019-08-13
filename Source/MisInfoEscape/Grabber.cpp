@@ -21,7 +21,7 @@ void UGrabber::BeginPlay()
 	SetupInputComponent();	
 }
 
-// Finds physics handle component (assumed to be) attached to this actor
+// Finds physics handle component (assumed to be) attached to the default pawn
 void UGrabber::FindPhysicsHandleComponent()
 {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
@@ -50,8 +50,21 @@ void UGrabber::SetupInputComponent()
 void UGrabber::Grab() 
 {
 	UE_LOG(LogTemp, Warning, TEXT("Tried to grab."));
-	GetFirstPhysicsBodyHandleInReach();
-	// TODO get body physics handle
+	// Get component and actor from hit result (might be nothing)
+	FHitResult HitResult = GetFirstPhysicsBodyHandleInReach();
+	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
+	AActor* HitActor = HitResult.GetActor();
+	
+	// If we hit something, then grab that component, constraining rotation
+	if (HitActor != nullptr) {
+		PhysicsHandle->GrabComponentAtLocationWithRotation(
+			ComponentToGrab,
+			NAME_None,
+			ComponentToGrab->GetOwner()->GetActorLocation(),
+			ComponentToGrab->GetOwner()->GetActorRotation()
+		);
+	}
+
 	return;
 }
 
@@ -89,7 +102,7 @@ FHitResult UGrabber::GetFirstPhysicsBodyHandleInReach()
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Released grab."));
-	// TODO release physics body handle
+	PhysicsHandle->ReleaseComponent();
 	return;
 }
 
@@ -98,7 +111,17 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	/// If a physics handle  of an object is attached
-		// move the object being held
+	/// If a physics handle of an object is attached
+	if (PhysicsHandle != nullptr) {
+		// Move the object being held to the end of player "reach line"
+		GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+			OUT PlayerViewPointLocation,
+			OUT PlayerViewPointRotation
+		);
+		LineTraceEnd = PlayerViewPointLocation + Reach * PlayerViewPointRotation.Vector();
+		
+		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+	}
 }
+		
 

@@ -12,6 +12,7 @@
 #include "Public/DrawDebugHelpers.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/PrimitiveComponent.h"
 
 #include "Grabber.generated.h"
 
@@ -41,7 +42,7 @@ private:
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
 
-	void FindPhysicsHandleComponent();	// Finds 
+	void FindPhysicsHandleComponent();
 	void SetupInputComponent();
 	void Grab();						// Ray-casts and tries to grab what is in reach
 	FHitResult GetFirstPhysicsBodyHandleInReach();
