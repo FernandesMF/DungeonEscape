@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Grabber component for the player pawn.
 
 #pragma once
 
@@ -31,20 +31,27 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
+	// Called every frame. Moves the grabbed object around, following the end of the reaching ray of the pawn.
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 private:
+	/// The grabbing system will be based on ray-casting from the player position in his/her looking direction,
+	/// up to a certian reach distance. These are the ray-casting variables and method. Since this mechanic is central
+	/// in this game, they will be "global" in this class, instead of having rtestricted scope inside of a function.
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 	float Reach = 100.0f;				// reaching distance in cm
 	FVector LineTraceEnd;
-	UPhysicsHandleComponent* PhysicsHandle = nullptr;
-	UInputComponent* InputComponent = nullptr;
+	void RayCastReach();
 
-	void FindPhysicsHandleComponent();
-	void SetupInputComponent();
-	void Grab();						// Ray-casts and tries to grab what is in reach
-	FHitResult GetFirstPhysicsBodyHandleInReach();
-	void Release();						// Releases the grabbed object
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;	// Dummy initialization of physics handle
+	void FindPhysicsHandleComponent();					// Finds physics handle of the player pawn
+
+	UInputComponent* InputComponent = nullptr;		// Dummy initialization to the input component of player pawn
+	void SetupInputComponent();						// Binds contoller input to actions
+	
+	FHitResult GetFirstPhysicsBodyHandleInReach();	// Ray-casts up to the reaching distance and returns the first object hit, if any
+	void Grab();									// Grabs the object returned from ray-cast hit, if any
+	void Release();									// Releases the grabbed object
+	
 };

@@ -1,8 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-#include "Grabber.h"
 
 #define OUT
+#include "Grabber.h"
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -21,35 +19,34 @@ void UGrabber::BeginPlay()
 	SetupInputComponent();	
 }
 
-// Finds physics handle component (assumed to be) attached to the default pawn
+// Finds physics handle component (assumed to be) attached to the pawn
 void UGrabber::FindPhysicsHandleComponent()
 {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle) {}
-	else {
+	if (PhysicsHandle == nullptr) {
 		UE_LOG(LogTemp, Error, TEXT("%s has no physics handle component..."), *GetOwner()->GetName());
 	}
+	return;
 }
 
-// Binds actions to the input component
+// Binds actions to the input component of the pawn.
 void UGrabber::SetupInputComponent()
 {
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if (InputComponent) {
-		UE_LOG(LogTemp, Warning, TEXT("Found input component for %s!"), *GetOwner()->GetName());
-		/// Bind the input actions
 		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("%s has no input component..."), *GetOwner()->GetName());
 	}
+	return;
 }
 
-// Gets physics handle of the object hit by ray-casting  
+// Called when the input event assigned to "Grab" is triggered. Grabs the component
+// that was returned from ray-cast hit (if any)
 void UGrabber::Grab() 
 {
-	UE_LOG(LogTemp, Warning, TEXT("Tried to grab."));
 	// Get component and actor from hit result (might be nothing)
 	FHitResult HitResult = GetFirstPhysicsBodyHandleInReach();
 	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
@@ -68,22 +65,21 @@ void UGrabber::Grab()
 	return;
 }
 
-// Ray-casts from player position, and returns Hit if there was an object in reach
+// Called when the input event assigned to "Release" is triggered. Releasess the component
+// that is grabbed by the physics handle.
+void UGrabber::Release()
+{
+	PhysicsHandle->ReleaseComponent();
+	return;
+}
+
+// Returns Hit if there was an object in reach 
 FHitResult UGrabber::GetFirstPhysicsBodyHandleInReach()
 {
-	/// Get player POV
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
-		OUT PlayerViewPointLocation,
-		OUT PlayerViewPointRotation
-	);
-
-	/// Cast ray up to a given distance
-	LineTraceEnd = PlayerViewPointLocation + Reach * PlayerViewPointRotation.Vector();
-
+	RayCastReach();
 	/// Check what is being reached
 	FHitResult Hit;
 	FCollisionQueryParams(FName(TEXT("")), false, GetOwner());
-
 	GetWorld()->LineTraceSingleByObjectType(
 		OUT Hit,
 		PlayerViewPointLocation,
@@ -91,37 +87,31 @@ FHitResult UGrabber::GetFirstPhysicsBodyHandleInReach()
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody)
 	);
 	AActor* ActorHit = Hit.GetActor();
-	if (ActorHit) {
-		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *(ActorHit->GetName()));
-	}
 
 	return Hit;
 }
 
-// Releases the object physics handle
-void UGrabber::Release()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Released grab."));
-	PhysicsHandle->ReleaseComponent();
+// Casts ray from player position in the direction he/she is looking, up to the reaching distance
+void UGrabber::RayCastReach() {
+	/// Get player POV
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+	LineTraceEnd = PlayerViewPointLocation + Reach * PlayerViewPointRotation.Vector();
 	return;
 }
 
-// Called every frame
+// Called every frame. Moves the grabbed object around, following the end of the reaching ray of the pawn.
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	/// If a physics handle of an object is attached
 	if (PhysicsHandle != nullptr) {
-		// Move the object being held to the end of player "reach line"
-		GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
-			OUT PlayerViewPointLocation,
-			OUT PlayerViewPointRotation
-		);
-		LineTraceEnd = PlayerViewPointLocation + Reach * PlayerViewPointRotation.Vector();
-		
+		// Update its position to the end of player's "reach line"
+		RayCastReach();		
 		PhysicsHandle->SetTargetLocation(LineTraceEnd);
 	}
+	return;
 }
-		
-
