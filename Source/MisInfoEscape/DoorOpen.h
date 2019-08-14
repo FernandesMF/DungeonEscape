@@ -3,8 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "Components/ActorComponent.h"
 #include "Engine/TriggerVolume.h"
+#include "Components/PrimitiveComponent.h"
+
 #include "DoorOpen.generated.h"
 
 
@@ -37,7 +38,7 @@ private:
 	float CloseDelay = 0.3f;
 
 	UPROPERTY(EditAnywhere)
-	float TriggerMass = 200.f;
+	float TriggerMass = 30.f;
 
 	float LastOpenTime = 0.0f;
 
