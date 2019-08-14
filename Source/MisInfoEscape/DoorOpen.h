@@ -5,9 +5,14 @@
 #include "CoreMinimal.h"
 #include "Engine/TriggerVolume.h"
 #include "Components/PrimitiveComponent.h"
+#include "Gameframework/Actor.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
+//#include "GameFramework/Controller.h"
 
 #include "DoorOpen.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOpenRequest);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MISINFOESCAPE_API UDoorOpen : public UActorComponent
@@ -30,6 +35,9 @@ public:
 	void CloseDoor();
 	float TotalMassOverPressurePlate();
 
+	UPROPERTY(BlueprintAssignable)
+	FOpenRequest OpenRequest;
+
 private:
 	UPROPERTY(EditAnywhere)
 	float OpenAngle = 90.0f;
@@ -46,7 +54,4 @@ private:
 	ATriggerVolume* PressurePlate = nullptr;
 
 	AActor* Owner = nullptr;
-
-	//UPROPERTY(VisibleAnywhere)
-	//AActor* ActorThatTriggers;
 };

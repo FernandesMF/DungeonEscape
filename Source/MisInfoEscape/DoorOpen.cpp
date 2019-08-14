@@ -2,11 +2,6 @@
 #define OUT
 
 #include "DoorOpen.h"
-#include "Gameframework/Actor.h"
-#include "Engine/World.h"
-#include "GameFramework/PlayerController.h"
-//#include "GameFramework/Controller.h"
-
 
 // Sets default values for this component's properties
 UDoorOpen::UDoorOpen()
@@ -51,7 +46,8 @@ void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 void UDoorOpen::OpenDoor()
 {	
 	if (!Owner) { return; }
-	Owner->SetActorRotation(FRotator (0.f, -OpenAngle, 0.f));
+	OpenRequest.Broadcast();
+	//Owner->SetActorRotation(FRotator (0.f, -OpenAngle, 0.f));
 	return;
 }
 
