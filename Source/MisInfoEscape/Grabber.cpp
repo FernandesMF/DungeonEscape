@@ -53,6 +53,7 @@ void UGrabber::Grab()
 	AActor* HitActor = HitResult.GetActor();
 	
 	// If we hit something, then grab that component, constraining rotation
+	if (!PhysicsHandle) { return; }
 	if (HitActor != nullptr) {
 		PhysicsHandle->GrabComponentAtLocationWithRotation(
 			ComponentToGrab,
@@ -69,6 +70,7 @@ void UGrabber::Grab()
 // that is grabbed by the physics handle.
 void UGrabber::Release()
 {
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->ReleaseComponent();
 	return;
 }

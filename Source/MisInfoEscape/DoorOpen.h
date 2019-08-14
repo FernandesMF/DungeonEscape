@@ -43,9 +43,9 @@ private:
 	float LastOpenTime = 0.0f;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+	ATriggerVolume* PressurePlate = nullptr;
 
-	AActor* Owner = GetOwner();
+	AActor* Owner = nullptr;
 
 	//UPROPERTY(VisibleAnywhere)
 	//AActor* ActorThatTriggers;

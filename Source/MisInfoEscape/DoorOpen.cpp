@@ -21,7 +21,12 @@ UDoorOpen::UDoorOpen()
 void UDoorOpen::BeginPlay()
 {
 	Super::BeginPlay();
-	//ActorThatTriggers = GetWorld()->GetFirstPlayerController()->GetPawn();
+	Owner = GetOwner();
+	if (!PressurePlate) {
+		UE_LOG(LogTemp, Error, TEXT("No pressure plate assigned to %s"), *Owner->GetName());
+		return;
+	}
+	return;
 }
 
 
@@ -29,6 +34,7 @@ void UDoorOpen::BeginPlay()
 void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!PressurePlate) { return; }
 	// Door opens if total mass over the trigger volume is bigger than the triggering mass
 	if (TotalMassOverPressurePlate() > TriggerMass)
 	{
@@ -39,21 +45,26 @@ void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	else if ( GetWorld()->GetTimeSeconds() - LastOpenTime > CloseDelay) {
 		CloseDoor();
 	}
+	return;
 }
 
 void UDoorOpen::OpenDoor()
 {	
+	if (!Owner) { return; }
 	Owner->SetActorRotation(FRotator (0.f, -OpenAngle, 0.f));
+	return;
 }
 
 void UDoorOpen::CloseDoor()
 {
+	if (!Owner) { return; }
 	Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
+	return;
 }
 
 float UDoorOpen::TotalMassOverPressurePlate() {
 	float TotalMass = 0.f;
-		
+	if (!PressurePlate) { return TotalMass; }
 	// Find all overlapping actors
 	TArray<AActor*> OverlappingActors;
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
