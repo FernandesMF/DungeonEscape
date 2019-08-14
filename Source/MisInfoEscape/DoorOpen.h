@@ -12,7 +12,7 @@
 
 #include "DoorOpen.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOpenRequest);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MISINFOESCAPE_API UDoorOpen : public UActorComponent
@@ -31,24 +31,18 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void OpenDoor();
-	void CloseDoor();
 	float TotalMassOverPressurePlate();
 
 	UPROPERTY(BlueprintAssignable)
-	FOpenRequest OpenRequest;
+	FDoorEvent OpenRequest;
+
+	UPROPERTY(BlueprintAssignable)
+	FDoorEvent CloseRequest;
 
 private:
-	UPROPERTY(EditAnywhere)
-	float OpenAngle = 90.0f;
-
-	UPROPERTY(EditAnywhere)
-	float CloseDelay = 0.3f;
 
 	UPROPERTY(EditAnywhere)
 	float TriggerMass = 30.f;
-
-	float LastOpenTime = 0.0f;
 
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate = nullptr;
