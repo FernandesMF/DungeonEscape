@@ -11,7 +11,6 @@ UDoorOpen::UDoorOpen()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-
 // Called when the game starts
 void UDoorOpen::BeginPlay()
 {
